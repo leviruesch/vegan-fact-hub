@@ -35,20 +35,38 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .dark .glass-card {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    /* Echtschwarz / Neutralgrau im Dark Mode */
+    html.dark, html.dark body {
+      background-color: #000000 !important;
+      color: #e5e7eb !important;
     }
-    .light .glass-card {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    .dark .glass-card {
+      background: #121212;
+      border: 1px solid #262626;
+    }
+    .dark header {
+      background-color: rgba(0, 0, 0, 0.9) !important;
+      border-color: #262626 !important;
     }
 
-    /* Profi-Styling für das PDF Cheat-Sheet */
+    /* Weiß / Hellbeige im Light Mode */
+    html.light, html.light body {
+      background-color: #ffffff !important;
+      color: #1c1917 !important;
+    }
+    .light .glass-card {
+      background: #fdfbf7;
+      border: 1px solid #e7e5e4;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+    .light header {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      border-color: #e7e5e4 !important;
+    }
+
+    /* PDF Print Design */
     @media print {
-      header, button, nav, #devModal, #cardFullscreenModal, section {
+      header, button, nav, #devModal, #cardFullscreenModal, #zoomModal, #sortModal, section {
         display: none !important;
       }
       body {
@@ -61,26 +79,25 @@
       }
       .print-card {
         page-break-inside: avoid;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #cbd5e1;
         border-radius: 12px;
         padding: 18px;
         margin-bottom: 16px;
-        background: #f8fafc;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        background: #ffffff;
       }
     }
   </style>
 </head>
-<body id="appBody" class="bg-slate-950 text-slate-100 transition-colors duration-300 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-slate-950 antialiased">
+<body id="appBody" class="transition-colors duration-300 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-slate-950 antialiased">
 
   <!-- Header -->
-  <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-300 dark:border-slate-800/80 transition-colors shadow-sm dark:shadow-none">
+  <header class="sticky top-0 z-40 backdrop-blur-xl border-b transition-colors shadow-sm dark:shadow-none">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
       <div class="flex items-center gap-2.5 cursor-pointer group" onclick="showSection('home')">
         <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center font-bold text-xl shadow-lg shadow-brand-500/20 group-hover:scale-105 transition transform text-white">
           🌱
         </div>
-        <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-brand-700 via-emerald-600 to-teal-700 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
+        <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-brand-600 via-emerald-500 to-teal-400 bg-clip-text text-transparent">
           FactHub
         </span>
       </div>
@@ -89,17 +106,17 @@
       <div class="flex-1 max-w-md mx-3 md:mx-4">
         <div class="relative">
           <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Suche oder #Tag..." 
-                 class="w-full bg-slate-100 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-2xl px-3.5 py-2 pl-9 text-xs md:text-sm focus:outline-none focus:border-brand-500 text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 transition shadow-inner">
-          <span class="absolute left-3 top-2.5 text-slate-400 dark:text-slate-500 text-xs md:text-sm">🔍</span>
+                 class="w-full bg-stone-100 dark:bg-neutral-900 border border-stone-200 dark:border-neutral-800 rounded-2xl px-3.5 py-2 pl-9 text-xs md:text-sm focus:outline-none focus:border-brand-500 text-stone-800 dark:text-neutral-200 placeholder-stone-400 dark:placeholder-neutral-500 transition shadow-inner">
+          <span class="absolute left-3 top-2.5 text-stone-400 dark:text-neutral-500 text-xs md:text-sm">🔍</span>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <button onclick="toggleTheme()" class="p-2 md:p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:scale-105 transition shadow-sm">
+        <button onclick="toggleTheme()" class="p-2 md:p-2.5 rounded-2xl bg-stone-100 dark:bg-neutral-900 border border-stone-200 dark:border-neutral-800 text-stone-700 dark:text-neutral-300 hover:scale-105 transition shadow-sm">
           <span id="themeIcon">☀️</span>
         </button>
 
-        <button onclick="toggleDevModal()" class="text-xs bg-slate-900 dark:bg-slate-900 bg-brand-50 hover:bg-brand-100 dark:hover:bg-slate-800 text-brand-700 dark:text-slate-300 border border-brand-300 dark:border-slate-800 px-3 py-2.5 rounded-2xl transition font-semibold flex items-center gap-1 shadow-sm">
+        <button onclick="toggleDevModal()" class="text-xs bg-stone-900 dark:bg-neutral-900 bg-brand-50 hover:bg-brand-100 dark:hover:bg-neutral-800 text-brand-700 dark:text-neutral-300 border border-brand-300 dark:border-neutral-800 px-3 py-2.5 rounded-2xl transition font-semibold flex items-center gap-1 shadow-sm">
           ⚙️ <span class="hidden sm:inline">Dev-Modus</span>
         </button>
       </div>
@@ -115,11 +132,11 @@
         <span class="text-[11px] md:text-xs font-bold uppercase tracking-widest text-brand-700 dark:text-brand-400 bg-brand-100 dark:bg-brand-950/80 border border-brand-300 dark:border-brand-800/50 px-4 py-1.5 rounded-full shadow-sm">
           Evidenzbasiert & Wissenschaftlich
         </span>
-        <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+        <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-stone-900 dark:text-white leading-tight">
           Faktenbasierte Argumentation <br class="hidden sm:block">
           <span class="bg-gradient-to-r from-brand-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">auf den Punkt gebracht.</span>
         </h1>
-        <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-sm md:text-lg px-2">
+        <p class="text-stone-600 dark:text-neutral-400 max-w-2xl mx-auto text-sm md:text-lg px-2">
           Wähle ein Hauptthema, erkunde die Unterkategorien und erhalte sofortige Argumente mit Studien & Vollbild-Grafiken.
         </p>
       </div>
@@ -129,43 +146,46 @@
 
     <!-- 2. Unterthemen -->
     <section id="sec-subcategories" class="hidden space-y-6">
-      <div class="flex items-center justify-between border-b border-slate-300 dark:border-slate-800/80 pb-4">
+      <div class="flex items-center justify-between border-b border-stone-200 dark:border-neutral-800 pb-4">
         <button onclick="showSection('home')" class="text-xs md:text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1.5">
           ← Zurück zur Übersicht
         </button>
-        <h2 id="currentCategoryTitle" class="text-lg md:text-2xl font-bold text-slate-900 dark:text-slate-100"></h2>
+        <h2 id="currentCategoryTitle" class="text-lg md:text-2xl font-bold text-stone-900 dark:text-neutral-100"></h2>
       </div>
 
-      <p class="text-slate-600 dark:text-slate-400 text-xs md:text-sm">Wähle ein Unterthema aus:</p>
+      <p class="text-stone-600 dark:text-neutral-400 text-xs md:text-sm">Wähle ein Unterthema aus:</p>
       <div id="subcategoriesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4"></div>
     </section>
 
     <!-- 3. Karten-Ansicht -->
     <section id="sec-cards" class="hidden space-y-6">
-      <div class="flex items-center justify-between border-b border-slate-300 dark:border-slate-800/80 pb-4">
+      <div class="flex items-center justify-between border-b border-stone-200 dark:border-neutral-800 pb-4">
         <button onclick="showSection('subcategories')" class="text-xs md:text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1.5">
           ← Zurück zu Unterthemen
         </button>
         
-        <div class="flex items-center gap-3">
-          <button onclick="printCurrentSubcategory()" class="text-xs bg-brand-50 hover:bg-brand-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-brand-700 dark:text-brand-300 border border-brand-300 dark:border-slate-700 px-3.5 py-2 rounded-xl transition font-semibold flex items-center gap-1.5 shadow-sm">
-            📄 PDF / Cheat-Sheet drucken
+        <div class="flex items-center gap-2">
+          <button id="sortBtn" onclick="toggleSortModal()" class="hidden text-xs bg-stone-200 dark:bg-neutral-800 hover:bg-stone-300 dark:hover:bg-neutral-700 text-stone-800 dark:text-neutral-200 border border-stone-300 dark:border-neutral-700 px-3 py-2 rounded-xl transition font-semibold">
+            🔃 Sortieren
+          </button>
+          <button onclick="printCurrentSubcategory()" class="text-xs bg-brand-50 hover:bg-brand-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 text-brand-700 dark:text-brand-300 border border-brand-300 dark:border-neutral-700 px-3.5 py-2 rounded-xl transition font-semibold flex items-center gap-1.5 shadow-sm">
+            📄 PDF drucken
           </button>
         </div>
       </div>
 
-      <h2 id="currentSubcategoryTitle" class="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100"></h2>
+      <h2 id="currentSubcategoryTitle" class="text-xl md:text-2xl font-bold text-stone-900 dark:text-neutral-100"></h2>
 
       <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pt-2"></div>
     </section>
 
     <!-- Suchergebnisse & Tag-Ergebnisse -->
     <section id="sec-search" class="hidden space-y-6">
-      <div class="flex items-center justify-between border-b border-slate-300 dark:border-slate-800 pb-4">
-        <h2 id="searchTitle" class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white">Suchergebnisse</h2>
+      <div class="flex items-center justify-between border-b border-stone-200 dark:border-neutral-800 pb-4">
+        <h2 id="searchTitle" class="text-xl md:text-2xl font-bold text-stone-900 dark:text-white">Suchergebnisse</h2>
         <div class="flex items-center gap-3">
-          <button onclick="printSearchResults()" class="text-xs bg-brand-50 hover:bg-brand-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-brand-700 dark:text-brand-300 border border-brand-300 dark:border-slate-700 px-3.5 py-2 rounded-xl transition font-semibold flex items-center gap-1.5 shadow-sm">
-            📄 PDF aus Ergebissen
+          <button onclick="printSearchResults()" class="text-xs bg-brand-50 hover:bg-brand-100 dark:bg-neutral-900 dark:hover:bg-neutral-800 text-brand-700 dark:text-brand-300 border border-brand-300 dark:border-neutral-700 px-3.5 py-2 rounded-xl transition font-semibold flex items-center gap-1.5 shadow-sm">
+            📄 PDF aus Ergebnissen
           </button>
           <button onclick="showSection('home')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 underline">Zurück</button>
         </div>
@@ -178,57 +198,85 @@
 
   </main>
 
-  <!-- Vollbild-Modal für Karten-Rückseite, Vorlesen & Bilder -->
-  <div id="cardFullscreenModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-50 hidden flex flex-col p-4 md:p-8 overflow-y-auto">
-    <div class="max-w-3xl w-full mx-auto my-auto bg-slate-900 border border-brand-500/40 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 text-white relative">
-      <div class="flex justify-between items-start border-b border-slate-800 pb-4">
+  <!-- Vollbild-Modal für Karten-Rückseite & Quellen -->
+  <div id="cardFullscreenModal" class="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 hidden flex flex-col p-4 md:p-8 overflow-y-auto">
+    <div class="max-w-3xl w-full mx-auto my-auto bg-stone-50 dark:bg-neutral-900 border border-stone-200 dark:border-neutral-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 text-stone-900 dark:text-white relative">
+      <div class="flex justify-between items-start border-b border-stone-200 dark:border-neutral-800 pb-4">
         <div>
-          <span id="modalSubcategory" class="text-xs bg-brand-950 text-brand-400 border border-brand-800/50 px-3 py-1 rounded-full font-semibold"></span>
-          <h3 id="modalTitle" class="text-xl md:text-2xl font-extrabold text-slate-100 mt-3 leading-snug"></h3>
+          <span id="modalSubcategory" class="text-xs bg-brand-100 dark:bg-brand-950 text-brand-800 dark:text-brand-400 border border-brand-300 dark:border-brand-800/50 px-3 py-1 rounded-full font-semibold"></span>
+          <h3 id="modalTitle" class="text-xl md:text-2xl font-extrabold text-stone-900 dark:text-neutral-100 mt-3 leading-snug"></h3>
           <div id="modalTags" class="flex flex-wrap gap-1.5 mt-2"></div>
         </div>
-        <button onclick="closeFullscreenCard()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2.5 rounded-2xl text-lg font-bold transition">
+        <button onclick="closeFullscreenCard()" class="bg-stone-200 dark:bg-neutral-800 hover:bg-stone-300 dark:hover:bg-neutral-700 text-stone-700 dark:text-neutral-300 p-2.5 rounded-2xl text-lg font-bold transition">
           ✕
         </button>
       </div>
 
       <div class="space-y-4">
         <div class="flex items-center justify-between">
-          <h4 class="text-xs font-bold text-brand-400 uppercase tracking-wider">Erklärung & Belege</h4>
-          <button onclick="speakText()" class="text-xs bg-slate-800 hover:bg-slate-700 text-brand-300 px-3 py-1.5 rounded-xl transition flex items-center gap-1 border border-slate-700">
+          <h4 class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">Erklärung & Belege</h4>
+          <button id="ttsBtn" onclick="toggleSpeech()" class="text-xs bg-stone-200 dark:bg-neutral-800 hover:bg-stone-300 dark:hover:bg-neutral-700 text-stone-800 dark:text-brand-300 px-3 py-1.5 rounded-xl transition flex items-center gap-1 border border-stone-300 dark:border-neutral-700">
             🔊 Laut vorlesen
           </button>
         </div>
 
-        <p id="modalText" class="text-sm md:text-base text-slate-300 leading-relaxed whitespace-pre-line"></p>
+        <p id="modalText" class="text-sm md:text-base text-stone-700 dark:text-neutral-300 leading-relaxed whitespace-pre-line"></p>
 
         <div id="modalStatContainer" class="pt-2"></div>
+
+        <!-- Quellenliste -->
+        <div id="modalSourcesContainer" class="border-t border-stone-200 dark:border-neutral-800 pt-4 space-y-2">
+          <h5 class="text-xs font-bold text-stone-500 dark:text-neutral-400 uppercase tracking-wider">📚 Quellen & Belege</h5>
+          <div id="modalSourcesList" class="space-y-1.5 text-xs"></div>
+        </div>
       </div>
 
-      <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-2">
-        <div id="modalSourceBtn"></div>
-        <button onclick="closeFullscreenCard()" class="bg-brand-600 hover:bg-brand-500 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-lg">
+      <div class="pt-4 border-t border-stone-200 dark:border-neutral-800 flex items-center justify-end">
+        <button onclick="closeFullscreenCard()" class="bg-brand-600 hover:bg-brand-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition shadow-lg">
           Schließen
         </button>
       </div>
     </div>
   </div>
 
+  <!-- Zoom Lightbox Modal -->
+  <div id="zoomModal" class="fixed inset-0 bg-black/95 z-50 hidden flex flex-col items-center justify-center p-4" onclick="closeZoomModal()">
+    <button onclick="closeZoomModal()" class="absolute top-4 right-4 bg-neutral-800 text-white p-3 rounded-2xl font-bold text-lg z-50">✕ Schließen</button>
+    <img id="zoomModalImage" src="" alt="Vergrößerte Grafik" class="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl" onclick="event.stopPropagation()">
+  </div>
+
+  <!-- Karten-Sortieren Modal -->
+  <div id="sortModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-stone-50 dark:bg-neutral-900 border border-stone-200 dark:border-neutral-800 rounded-3xl p-6 max-w-lg w-full space-y-4 text-stone-900 dark:text-white">
+      <div class="flex justify-between items-center border-b border-stone-200 dark:border-neutral-800 pb-3">
+        <h3 class="font-bold text-lg">🔃 Kartenreihenfolge anpassen</h3>
+        <button onclick="toggleSortModal()" class="text-stone-400 hover:text-stone-600 dark:hover:text-white">✕</button>
+      </div>
+      <p class="text-xs text-stone-500 dark:text-neutral-400">Pfeile nutzen, um Karten hoch oder runter zu schieben:</p>
+      
+      <div id="sortableList" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
+
+      <button onclick="saveCardOrder()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-2.5 rounded-xl text-xs transition">
+        💾 Neue Reihenfolge Speichern
+      </button>
+    </div>
+  </div>
+
   <!-- Dev-Modus Modal -->
   <div id="devModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-3xl p-6 max-w-2xl w-full space-y-6 shadow-2xl text-slate-800 dark:text-slate-100">
+    <div class="bg-stone-50 dark:bg-neutral-900 border border-stone-200 dark:border-neutral-800 rounded-3xl p-6 max-w-2xl w-full space-y-6 shadow-2xl text-stone-800 dark:text-neutral-100">
       
-      <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-4">
+      <div class="flex justify-between items-center border-b border-stone-200 dark:border-neutral-800 pb-4">
         <div>
           <h3 class="text-xl font-bold text-brand-600 dark:text-brand-400">⚙️ Developer Modus</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400">Verwaltung, Unterthemen-Löschung & Datenbank-Backup.</p>
+          <p class="text-xs text-stone-500 dark:text-neutral-400">Verwaltung, Sortierung & Datenbank-Backup.</p>
         </div>
-        <button onclick="toggleDevModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-xl">✕</button>
+        <button onclick="toggleDevModal()" class="text-stone-400 hover:text-stone-600 dark:hover:text-white text-xl">✕</button>
       </div>
 
       <div id="devLoginForm" class="space-y-4">
-        <p class="text-sm text-slate-600 dark:text-slate-400">Melde dich an, um Zugriff auf die Verwaltung zu erhalten.</p>
-        <button onclick="handleDevLogin()" class="w-full bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 text-white font-bold py-3 rounded-2xl flex items-center justify-center gap-3 transition text-sm shadow-md">
+        <p class="text-sm text-stone-600 dark:text-neutral-400">Melde dich an, um Zugriff auf die Verwaltung zu erhalten.</p>
+        <button onclick="handleDevLogin()" class="w-full bg-stone-900 dark:bg-neutral-800 hover:bg-stone-800 text-white font-bold py-3 rounded-2xl flex items-center justify-center gap-3 transition text-sm shadow-md">
           <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google Logo">
           Mit Google anmelden
         </button>
@@ -237,14 +285,14 @@
       <div id="devAddForm" class="hidden space-y-4 max-h-[75vh] overflow-y-auto pr-2">
         
         <!-- Tab Navigation -->
-        <div class="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl gap-2 border border-slate-200 dark:border-slate-700">
-          <button id="tabBtnCards" onclick="switchDevTab('cards')" class="flex-1 py-2 text-xs font-bold rounded-xl transition bg-white dark:bg-slate-900 shadow-sm text-brand-600 dark:text-brand-400">
+        <div class="flex bg-stone-200 dark:bg-neutral-800 p-1.5 rounded-2xl gap-2 border border-stone-300 dark:border-neutral-700">
+          <button id="tabBtnCards" onclick="switchDevTab('cards')" class="flex-1 py-2 text-xs font-bold rounded-xl transition bg-white dark:bg-neutral-900 shadow-sm text-brand-600 dark:text-brand-400">
             🃏 1. Karten
           </button>
-          <button id="tabBtnSubcategories" onclick="switchDevTab('subcategories')" class="flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+          <button id="tabBtnSubcategories" onclick="switchDevTab('subcategories')" class="flex-1 py-2 text-xs font-bold rounded-xl transition text-stone-500 dark:text-neutral-400 hover:text-stone-800 dark:hover:text-neutral-200">
             📁 2. Themen
           </button>
-          <button id="tabBtnBackup" onclick="switchDevTab('backup')" class="flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+          <button id="tabBtnBackup" onclick="switchDevTab('backup')" class="flex-1 py-2 text-xs font-bold rounded-xl transition text-stone-500 dark:text-neutral-400 hover:text-stone-800 dark:hover:text-neutral-200">
             💾 3. Backup
           </button>
         </div>
@@ -255,13 +303,13 @@
 
           <div class="flex items-center justify-between bg-brand-50 dark:bg-brand-950/50 border border-brand-200 dark:border-brand-800/50 p-3 rounded-2xl">
             <span id="formModeText" class="text-xs font-semibold text-brand-800 dark:text-brand-300">Neue Karteikarte erstellen</span>
-            <button id="cancelEditBtn" onclick="resetForm()" class="hidden text-xs text-slate-500 underline">Bearbeiten abbrechen</button>
+            <button id="cancelEditBtn" onclick="resetForm()" class="hidden text-xs text-stone-500 underline">Bearbeiten abbrechen</button>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="text-xs text-slate-500 font-medium">1. Hauptkategorie</label>
-              <select id="formCategory" onchange="updateSubcategoryDropdown()" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-sm mt-1 focus:border-brand-500 outline-none">
+              <label class="text-xs text-stone-500 font-medium">1. Hauptkategorie</label>
+              <select id="formCategory" onchange="updateSubcategoryDropdown()" class="w-full bg-stone-100 dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2.5 text-sm mt-1 focus:border-brand-500 outline-none">
                 <option value="gesundheit">1. Gesundheit & Ernährung</option>
                 <option value="umwelt">2. Umwelt, Klima & Landwirtschaft</option>
                 <option value="ethik">3. Ethik, Zucht & Haltungsformen</option>
@@ -271,85 +319,87 @@
             </div>
 
             <div>
-              <label class="text-xs text-slate-500 font-medium">2. Unterthema wählen</label>
-              <select id="formSubcategorySelect" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-sm mt-1 focus:border-brand-500 outline-none">
+              <label class="text-xs text-stone-500 font-medium">2. Unterthema wählen</label>
+              <select id="formSubcategorySelect" class="w-full bg-stone-100 dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2.5 text-sm mt-1 focus:border-brand-500 outline-none">
               </select>
             </div>
           </div>
 
           <div>
-            <label class="text-xs text-slate-500 font-medium">Hauptargument / Frage (Vorderseite)</label>
-            <textarea id="formTitle" rows="2" placeholder="z.B. Wie steht es um die Eiweißversorgung bei veganer Ernährung?" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-sm mt-1 focus:border-brand-500 outline-none"></textarea>
+            <label class="text-xs text-stone-500 font-medium">Hauptargument / Frage (Vorderseite)</label>
+            <textarea id="formTitle" rows="2" placeholder="z.B. Wie steht es um die Eiweißversorgung bei veganer Ernährung?" class="w-full bg-stone-100 dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2.5 text-sm mt-1 focus:border-brand-500 outline-none"></textarea>
           </div>
 
           <div>
-            <label class="text-xs text-slate-500 font-medium">Ausführliche Erklärung (Rückseite)</label>
-            <textarea id="formText" rows="4" placeholder="Wissenschaftliche Belege, Argumentation..." class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-sm mt-1 focus:border-brand-500 outline-none"></textarea>
+            <label class="text-xs text-stone-500 font-medium">Ausführliche Erklärung (Rückseite - Nutze [1], [2] für Zitate)</label>
+            <textarea id="formText" rows="4" placeholder="Wissenschaftliche Belege... Laut Studien [1] ist die Proteinqualität hervorragend [2]." class="w-full bg-stone-100 dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2.5 text-sm mt-1 focus:border-brand-500 outline-none"></textarea>
           </div>
 
           <div>
-            <label class="text-xs text-slate-500 font-medium">Schlagworte / Tags (mit Komma trennen)</label>
-            <input type="text" id="formTags" placeholder="z.B. B12, Protein, Sport, Kinder" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-sm mt-1 focus:border-brand-500 outline-none">
+            <label class="text-xs text-stone-500 font-medium">Schlagworte / Tags (mit Komma trennen)</label>
+            <input type="text" id="formTags" placeholder="z.B. B12, Protein, Sport, Kinder" class="w-full bg-stone-100 dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2.5 text-sm mt-1 focus:border-brand-500 outline-none">
+          </div>
+
+          <!-- Multiple Quellen Management -->
+          <div class="bg-stone-200/60 dark:bg-neutral-800/50 p-4 rounded-2xl border border-stone-300 dark:border-neutral-700/60 space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider block">📚 Quellen & Belege</span>
+              <button onclick="addSourceInputRow()" class="text-xs bg-brand-600 text-white px-2.5 py-1 rounded-lg font-semibold hover:bg-brand-500 transition">+ Quelle hinzufügen</button>
+            </div>
+            
+            <div id="sourcesContainer" class="space-y-2"></div>
           </div>
 
           <!-- Statistik & Bilder Option -->
-          <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-3">
-            <span class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider block">📊 Visualisierung (Wird im Vollbild & PDF angezeigt)</span>
+          <div class="bg-stone-200/60 dark:bg-neutral-800/50 p-4 rounded-2xl border border-stone-300 dark:border-neutral-700/60 space-y-3">
+            <span class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider block">📊 Visualisierung</span>
             
             <div>
-              <label class="text-xs text-slate-500">Typ der Visualisierung</label>
-              <select id="formStatType" onchange="toggleStatFields()" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm mt-1">
+              <label class="text-xs text-stone-500">Typ der Visualisierung</label>
+              <select id="formStatType" onchange="toggleStatFields()" class="w-full bg-white dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2 text-sm mt-1">
                 <option value="none">Keine Grafik</option>
                 <option value="badge">Kennzahl / Badge (z.B. -75%)</option>
-                <option value="bar">Balkendiagramm (Vergleich %)</option>
+                <option value="bar">Balkendiagramm (Beliebige Anzahl Vergleiche)</option>
                 <option value="chart">Trendkurve (Datenpunkte)</option>
                 <option value="image">Großes Bild / Infografik / Upload</option>
               </select>
             </div>
 
             <div id="statBadgeFields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-3">
-              <input type="text" id="formStatValue" placeholder="Wert (z.B. -75%)" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm">
-              <input type="text" id="formStatLabel" placeholder="Beschreibung (z.B. CO2-Ausstoß)" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm">
+              <input type="text" id="formStatValue" placeholder="Wert (z.B. -75%)" class="bg-white dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2 text-sm">
+              <input type="text" id="formStatLabel" placeholder="Beschreibung (z.B. CO2-Ausstoß)" class="bg-white dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2 text-sm">
             </div>
 
-            <div id="statBarFields" class="hidden space-y-2">
-              <div class="grid grid-cols-2 gap-2">
-                <input type="text" id="formBar1Label" placeholder="Label 1 (z.B. Vegan)" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm">
-                <input type="number" id="formBar1Value" placeholder="Wert 1 in % (z.B. 25)" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm">
+            <!-- Dynamische Balkendiagramm-Felder -->
+            <div id="statBarFields" class="hidden space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-semibold text-stone-500">Balken-Vergleiche</span>
+                <button onclick="addBarInputRow()" class="text-xs bg-stone-300 dark:bg-neutral-700 text-stone-800 dark:text-neutral-200 px-2 py-1 rounded-lg hover:bg-stone-400 dark:hover:bg-neutral-600">+ Balken hinzufügen</button>
               </div>
-              <div class="grid grid-cols-2 gap-2">
-                <input type="text" id="formBar2Label" placeholder="Label 2 (z.B. Mischkost)" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm">
-                <input type="number" id="formBar2Value" placeholder="Wert 2 in % (z.B. 100)" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm">
-              </div>
+              <div id="barsContainer" class="space-y-2"></div>
             </div>
 
             <div id="statChartFields" class="hidden space-y-2">
-              <input type="text" id="formChartData" placeholder="Werte mit Komma (z.B. 20,40,35,80,95)" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm">
-              <input type="text" id="formChartLabel" placeholder="Titel (z.B. Marktwachstum 2020-2026)" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm">
+              <input type="text" id="formChartData" placeholder="Werte mit Komma (z.B. 20,40,35,80,95)" class="w-full bg-white dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2 text-sm">
+              <input type="text" id="formChartLabel" placeholder="Titel (z.B. Marktwachstum 2020-2026)" class="w-full bg-white dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2 text-sm">
             </div>
 
             <div id="statImageFields" class="hidden space-y-3">
               <div>
-                <label class="text-[11px] text-slate-500 font-semibold">Option A: Bild-URL aus dem Internet</label>
-                <input type="url" id="formImageUrl" placeholder="https://.../statistik.png" class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm mt-1">
+                <label class="text-[11px] text-stone-500 font-semibold">Option A: Bild-URL aus dem Internet</label>
+                <input type="url" id="formImageUrl" placeholder="https://.../statistik.png" class="w-full bg-white dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2 text-sm mt-1">
               </div>
               <div class="relative flex py-1 items-center">
-                <div class="flex-grow border-t border-slate-300 dark:border-slate-700"></div>
-                <span class="flex-shrink mx-2 text-[10px] text-slate-400 uppercase">Oder</span>
-                <div class="flex-grow border-t border-slate-300 dark:border-slate-700"></div>
+                <div class="flex-grow border-t border-stone-300 dark:border-neutral-700"></div>
+                <span class="flex-shrink mx-2 text-[10px] text-stone-400 uppercase">Oder</span>
+                <div class="flex-grow border-t border-stone-300 dark:border-neutral-700"></div>
               </div>
               <div>
-                <label class="text-[11px] text-slate-500 font-semibold">Option B: Bild vom Computer hochladen</label>
-                <input type="file" id="formFileInput" accept="image/*" onchange="handleFileUpload(event)" class="w-full text-xs text-slate-500 mt-1 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-100 file:text-brand-700 hover:file:bg-brand-200">
+                <label class="text-[11px] text-stone-500 font-semibold">Option B: Bild vom Computer hochladen</label>
+                <input type="file" id="formFileInput" accept="image/*" onchange="handleFileUpload(event)" class="w-full text-xs text-stone-500 mt-1 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-100 file:text-brand-700 hover:file:bg-brand-200">
               </div>
               <input type="hidden" id="formBase64Image" value="">
             </div>
-          </div>
-
-          <div>
-            <label class="text-xs text-slate-500 font-medium">Quellen & Belege (Titel & Link)</label>
-            <input type="text" id="formSourceTitle" placeholder="z.B. Oxford University (2018)" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-sm mt-1 focus:border-brand-500 outline-none">
-            <input type="url" id="formSourceLink" placeholder="https://..." class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-sm mt-2 focus:border-brand-500 outline-none">
           </div>
 
           <button onclick="saveArgument()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 rounded-2xl transition text-sm shadow-lg shadow-brand-600/30">
@@ -357,20 +407,19 @@
           </button>
         </div>
 
-        <!-- TAB 2: UNTERTHEMEN MANAGEN & LÖSCHEN -->
+        <!-- TAB 2: UNTERTHEMEN MANAGEN -->
         <div id="devTabSubcategories" class="hidden space-y-4 pt-2">
-          
-          <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+          <div class="bg-stone-200/60 dark:bg-neutral-800/60 p-4 rounded-2xl border border-stone-300 dark:border-neutral-700 space-y-3">
             <h4 class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">➕ Neues Unterthema anlegen</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <select id="newSubCatCategory" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm">
+              <select id="newSubCatCategory" class="bg-white dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2 text-sm">
                 <option value="gesundheit">1. Gesundheit & Ernährung</option>
                 <option value="umwelt">2. Umwelt, Klima & Landwirtschaft</option>
                 <option value="ethik">3. Ethik, Zucht & Haltungsformen</option>
                 <option value="tiernutzung">4. Tiernutzung, Unterhaltung & Kultur</option>
                 <option value="oekonomie">5. Ökonomie, Gesellschaft & Ethik</option>
               </select>
-              <input type="text" id="newSubCatName" placeholder="Name (z.B. Proteine)" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-sm">
+              <input type="text" id="newSubCatName" placeholder="Name (z.B. Proteine)" class="bg-white dark:bg-neutral-800 border border-stone-300 dark:border-neutral-700 rounded-xl p-2 text-sm">
             </div>
             <button onclick="addNewSubcategory()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-2 rounded-xl text-xs transition">
               Unterthema hinzufügen
@@ -378,26 +427,25 @@
           </div>
 
           <div class="space-y-2">
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Unterthemen umbenennen oder löschen</h4>
+            <h4 class="text-xs font-bold text-stone-500 uppercase tracking-wider">Unterthemen umbenennen oder löschen</h4>
             <div id="devSubcategoriesList" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
           </div>
-
         </div>
 
-        <!-- TAB 3: BACKUP EXPORT / IMPORT -->
+        <!-- TAB 3: BACKUP -->
         <div id="devTabBackup" class="hidden space-y-4 pt-2">
-          <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+          <div class="bg-stone-200/60 dark:bg-neutral-800/60 p-4 rounded-2xl border border-stone-300 dark:border-neutral-700 space-y-3">
             <h4 class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">📥 Backup Herunterladen</h4>
-            <p class="text-xs text-slate-500">Sichere alle aktuellen Karteikarten und Daten als JSON-Datei auf deinem PC.</p>
-            <button onclick="downloadBackup()" class="w-full bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2">
+            <p class="text-xs text-stone-500">Sichere alle aktuellen Karteikarten und Daten als JSON-Datei auf deinem PC.</p>
+            <button onclick="downloadBackup()" class="w-full bg-stone-900 dark:bg-neutral-700 hover:bg-stone-800 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2">
               ⬇️ Backup Herunterladen (JSON)
             </button>
           </div>
 
-          <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
+          <div class="bg-stone-200/60 dark:bg-neutral-800/60 p-4 rounded-2xl border border-stone-300 dark:border-neutral-700 space-y-3">
             <h4 class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">📤 Backup Wiederherstellen</h4>
-            <p class="text-xs text-slate-500">Lade eine zuvor gespeicherte JSON-Backup-Datei hoch, um Daten einzuspielen.</p>
-            <input type="file" id="backupFileInput" accept=".json" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-100 file:text-brand-700">
+            <p class="text-xs text-stone-500">Lade eine zuvor gespeicherte JSON-Backup-Datei hoch, um Daten einzuspielen.</p>
+            <input type="file" id="backupFileInput" accept=".json" class="w-full text-xs text-stone-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-100 file:text-brand-700">
             <button onclick="restoreBackup()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2">
               ⚠️ Backup Jetzt Einspielen
             </button>
@@ -432,8 +480,8 @@
 
     const allowedDevs = [
       "leviruesch@gmail.com",
-      "rueschmathis0@gmail.com",
-      "eduardmakoto@gmail.com"
+      "bruder.email@gmail.com",
+      "freund.email@gmail.com"
     ];
 
     const categoriesData = [
@@ -449,7 +497,9 @@
     let currentCategory = null;
     let currentSubcategory = null;
     let currentFilteredCards = [];
+    let tempSortCards = [];
     let isDevLoggedIn = false;
+    let isSpeaking = false;
 
     async function loadCardsFromFirestore() {
       try {
@@ -458,6 +508,9 @@
         querySnapshot.forEach((docSnap) => {
           allCards.push({ id: docSnap.id, ...docSnap.data() });
         });
+        
+        // Karten nach order-Eigenschaft sortieren
+        allCards.sort((a, b) => (a.order || 0) - (b.order || 0));
         updateSubcategoryDropdown();
       } catch (e) {
         console.error("Fehler beim Laden aus Firestore:", e);
@@ -466,19 +519,13 @@
 
     window.toggleTheme = () => {
       const html = document.documentElement;
-      const body = document.getElementById('appBody');
-      
       if (html.classList.contains('dark')) {
         html.classList.remove('dark');
         html.classList.add('light');
-        body.classList.remove('bg-slate-950', 'text-slate-100');
-        body.classList.add('bg-slate-100', 'text-slate-800');
         document.getElementById('themeIcon').innerText = '🌙';
       } else {
         html.classList.remove('light');
         html.classList.add('dark');
-        body.classList.remove('bg-slate-100', 'text-slate-800');
-        body.classList.add('bg-slate-950', 'text-slate-100');
         document.getElementById('themeIcon').innerText = '☀️';
       }
     };
@@ -488,19 +535,19 @@
         document.getElementById(id).classList.add('hidden');
       });
       ['tabBtnCards', 'tabBtnSubcategories', 'tabBtnBackup'].forEach(id => {
-        document.getElementById(id).className = "flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800 dark:hover:text-slate-200";
+        document.getElementById(id).className = "flex-1 py-2 text-xs font-bold rounded-xl transition text-stone-500 dark:text-neutral-400 hover:text-stone-800 dark:hover:text-neutral-200";
       });
 
       if (tab === 'cards') {
         document.getElementById('devTabCards').classList.remove('hidden');
-        document.getElementById('tabBtnCards').className = "flex-1 py-2 text-xs font-bold rounded-xl transition bg-white dark:bg-slate-900 shadow-sm text-brand-600 dark:text-brand-400";
+        document.getElementById('tabBtnCards').className = "flex-1 py-2 text-xs font-bold rounded-xl transition bg-white dark:bg-neutral-900 shadow-sm text-brand-600 dark:text-brand-400";
       } else if (tab === 'subcategories') {
         document.getElementById('devTabSubcategories').classList.remove('hidden');
-        document.getElementById('tabBtnSubcategories').className = "flex-1 py-2 text-xs font-bold rounded-xl transition bg-white dark:bg-slate-900 shadow-sm text-brand-600 dark:text-brand-400";
+        document.getElementById('tabBtnSubcategories').className = "flex-1 py-2 text-xs font-bold rounded-xl transition bg-white dark:bg-neutral-900 shadow-sm text-brand-600 dark:text-brand-400";
         renderSubcategoryManager();
       } else if (tab === 'backup') {
         document.getElementById('devTabBackup').classList.remove('hidden');
-        document.getElementById('tabBtnBackup').className = "flex-1 py-2 text-xs font-bold rounded-xl transition bg-white dark:bg-slate-900 shadow-sm text-brand-600 dark:text-brand-400";
+        document.getElementById('tabBtnBackup').className = "flex-1 py-2 text-xs font-bold rounded-xl transition bg-white dark:bg-neutral-900 shadow-sm text-brand-600 dark:text-brand-400";
       }
     };
 
@@ -511,9 +558,55 @@
       });
 
       if (type === 'badge') document.getElementById('statBadgeFields').classList.remove('hidden');
-      if (type === 'bar') document.getElementById('statBarFields').classList.remove('hidden');
+      if (type === 'bar') {
+        document.getElementById('statBarFields').classList.remove('hidden');
+        if (document.getElementById('barsContainer').children.length === 0) {
+          addBarInputRow(); addBarInputRow();
+        }
+      }
       if (type === 'chart') document.getElementById('statChartFields').classList.remove('hidden');
       if (type === 'image') document.getElementById('statImageFields').classList.remove('hidden');
+    };
+
+    // Dynamische Quellenzeilen
+    window.addSourceInputRow = (title = '', url = '') => {
+      const container = document.getElementById('sourcesContainer');
+      const rowId = 'source_row_' + Date.now() + Math.random().toString(36).substring(2, 5);
+      const index = container.children.length + 1;
+      
+      const div = document.createElement('div');
+      div.id = rowId;
+      div.className = "grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-white dark:bg-neutral-800 p-2 rounded-xl border border-stone-300 dark:border-neutral-700";
+      div.innerHTML = `
+        <span class="md:col-span-1 text-xs font-bold text-stone-400">[${index}]</span>
+        <input type="text" placeholder="Titel (z.B. Oxford Studie 2018)" value="${title}" class="md:col-span-5 bg-stone-50 dark:bg-neutral-900 border border-stone-300 dark:border-neutral-700 rounded-lg p-1.5 text-xs">
+        <input type="url" placeholder="https://..." value="${url}" class="md:col-span-5 bg-stone-50 dark:bg-neutral-900 border border-stone-300 dark:border-neutral-700 rounded-lg p-1.5 text-xs">
+        <button onclick="document.getElementById('${rowId}').remove(); reindexSources();" class="md:col-span-1 text-red-500 font-bold hover:text-red-400 text-xs">✕</button>
+      `;
+      container.appendChild(div);
+    };
+
+    window.reindexSources = () => {
+      const rows = document.getElementById('sourcesContainer').children;
+      for (let i = 0; i < rows.length; i++) {
+        rows[i].querySelector('span').innerText = `[${i + 1}]`;
+      }
+    };
+
+    // Dynamische Balkenzeilen für Diagramm
+    window.addBarInputRow = (label = '', value = '') => {
+      const container = document.getElementById('barsContainer');
+      const rowId = 'bar_row_' + Date.now() + Math.random().toString(36).substring(2, 5);
+      
+      const div = document.createElement('div');
+      div.id = rowId;
+      div.className = "flex gap-2 items-center bg-white dark:bg-neutral-800 p-2 rounded-xl border border-stone-300 dark:border-neutral-700";
+      div.innerHTML = `
+        <input type="text" placeholder="Label (z.B. Vegan)" value="${label}" class="flex-1 bg-stone-50 dark:bg-neutral-900 border border-stone-300 dark:border-neutral-700 rounded-lg p-1.5 text-xs">
+        <input type="number" placeholder="Wert %" value="${value}" class="w-20 bg-stone-50 dark:bg-neutral-900 border border-stone-300 dark:border-neutral-700 rounded-lg p-1.5 text-xs">
+        <button onclick="document.getElementById('${rowId}').remove()" class="text-red-500 font-bold hover:text-red-400 text-xs px-1">✕</button>
+      `;
+      container.appendChild(div);
     };
 
     window.handleFileUpload = (event) => {
@@ -560,10 +653,10 @@
       grid.innerHTML = categoriesData.map(cat => `
         <div onclick="openCategory('${cat.id}')" class="glass-card hover:border-brand-500/50 p-5 md:p-6 rounded-3xl cursor-pointer transition group">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-3xl md:text-4xl p-3 bg-brand-50 dark:bg-slate-800/80 rounded-2xl border border-brand-200 dark:border-slate-700/50">${cat.icon}</span>
+            <span class="text-3xl md:text-4xl p-3 bg-brand-50 dark:bg-neutral-800 rounded-2xl border border-brand-200 dark:border-neutral-700/50">${cat.icon}</span>
             <span class="text-xs text-brand-700 dark:text-brand-400 font-bold bg-brand-100 dark:bg-brand-950/60 border border-brand-300 dark:border-brand-800/40 px-3 py-1 rounded-full">Kategorie</span>
           </div>
-          <h3 class="font-bold text-lg md:text-xl text-slate-800 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">${cat.title}</h3>
+          <h3 class="font-bold text-lg md:text-xl text-stone-800 dark:text-neutral-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">${cat.title}</h3>
         </div>
       `).join('');
     }
@@ -579,15 +672,15 @@
 
       const grid = document.getElementById('subcategoriesGrid');
       if (subcategories.length === 0) {
-        grid.innerHTML = `<p class="text-slate-500 col-span-3 text-center py-8 bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">Noch keine Unterthemen vorhanden. Erstelle eines im Dev-Modus!</p>`;
+        grid.innerHTML = `<p class="text-stone-500 dark:text-neutral-400 col-span-3 text-center py-8 bg-stone-100 dark:bg-neutral-900/50 rounded-2xl border border-stone-200 dark:border-neutral-800">Noch keine Unterthemen vorhanden. Erstelle eines im Dev-Modus!</p>`;
       } else {
         grid.innerHTML = subcategories.map(sub => {
           const count = allCards.filter(c => c.category === catId && c.subcategory === sub).length;
           return `
-            <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-brand-500/60 p-4 md:p-5 rounded-2xl transition flex items-center justify-between shadow-sm group">
+            <div class="glass-card hover:border-brand-500/60 p-4 md:p-5 rounded-2xl transition flex items-center justify-between shadow-sm group">
               <div onclick="openSubcategory('${sub}')" class="cursor-pointer flex-1">
-                <h4 class="font-bold text-slate-800 dark:text-slate-200 text-base md:text-lg group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">${sub}</h4>
-                <p class="text-xs text-slate-400 mt-0.5">${count} ${count === 1 ? 'Argument' : 'Argumente'}</p>
+                <h4 class="font-bold text-stone-800 dark:text-neutral-200 text-base md:text-lg group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">${sub}</h4>
+                <p class="text-xs text-stone-400 dark:text-neutral-400 mt-0.5">${count} ${count === 1 ? 'Argument' : 'Argumente'}</p>
               </div>
               <span onclick="openSubcategory('${sub}')" class="text-brand-500 text-xl cursor-pointer pl-2">→</span>
             </div>
@@ -601,14 +694,20 @@
     window.openSubcategory = (subName) => {
       currentSubcategory = subName;
       document.getElementById('currentSubcategoryTitle').innerText = `${currentCategory.title} → ${subName}`;
-      renderCards(allCards.filter(c => c.category === currentCategory.id && c.subcategory === subName));
+      
+      if (isDevLoggedIn) {
+        document.getElementById('sortBtn').classList.remove('hidden');
+      }
+
+      const matchingCards = allCards.filter(c => c.category === currentCategory.id && c.subcategory === subName);
+      renderCards(matchingCards);
       showSection('cards');
     };
 
     function renderCards(cards, containerId = 'cardsGrid') {
       const container = document.getElementById(containerId);
       if (!cards || cards.length === 0) {
-        container.innerHTML = `<p class="text-slate-400 col-span-2 text-center py-8">Keine Karten vorhanden.</p>`;
+        container.innerHTML = `<p class="text-stone-400 dark:text-neutral-400 col-span-2 text-center py-8">Keine Karten vorhanden.</p>`;
         return;
       }
 
@@ -631,14 +730,14 @@
                 </span>
               </div>
 
-              <h3 class="font-bold text-lg md:text-xl text-slate-800 dark:text-slate-100 leading-snug">
+              <h3 class="font-bold text-lg md:text-xl text-stone-800 dark:text-neutral-100 leading-snug">
                 ${card.title}
               </h3>
 
               ${tagList.length > 0 ? `
                 <div class="flex flex-wrap gap-1.5 mt-3" onclick="event.stopPropagation()">
                   ${tagList.map(t => `
-                    <span onclick="filterByTag('${t}')" class="text-[11px] bg-slate-100 dark:bg-slate-800 hover:bg-brand-100 dark:hover:bg-brand-950/80 text-slate-600 dark:text-slate-300 hover:text-brand-600 px-2.5 py-0.5 rounded-md font-medium transition cursor-pointer">
+                    <span onclick="filterByTag('${t}')" class="text-[11px] bg-stone-200/70 dark:bg-neutral-800 hover:bg-brand-100 dark:hover:bg-brand-950/80 text-stone-700 dark:text-neutral-300 hover:text-brand-600 px-2.5 py-0.5 rounded-md font-medium transition cursor-pointer">
                       #${t}
                     </span>
                   `).join('')}
@@ -646,7 +745,7 @@
               ` : ''}
             </div>
 
-            <div class="flex justify-between items-center text-xs text-brand-600 dark:text-brand-400 pt-6 mt-4 border-t border-slate-100 dark:border-slate-800/80 font-semibold">
+            <div class="flex justify-between items-center text-xs text-brand-600 dark:text-brand-400 pt-6 mt-4 border-t border-stone-200 dark:border-neutral-800 font-semibold">
               <span>🔍 Vollbild & Belege öffnen</span>
               <span>→</span>
             </div>
@@ -670,44 +769,46 @@
 
       document.getElementById('modalSubcategory').innerText = card.subcategory || 'Allgemein';
       document.getElementById('modalTitle').innerText = card.title;
-      document.getElementById('modalText').innerText = card.text;
+      
+      // Zitat-Verlinkung im Text [1], [2]...
+      let formattedText = card.text || '';
+      formattedText = formattedText.replace(/\[(\d+)\]/g, '<a href="#source-$1" class="text-brand-500 dark:text-brand-400 font-bold hover:underline">[ $1 ]</a>');
+      document.getElementById('modalText').innerHTML = formattedText;
 
       const tagList = card.tags ? card.tags.split(',').map(t => t.trim()).filter(t => t) : [];
       document.getElementById('modalTags').innerHTML = tagList.map(t => `
-        <span onclick="closeFullscreenCard(); filterByTag('${t}')" class="text-xs bg-slate-800 hover:bg-brand-900 text-brand-300 px-2.5 py-1 rounded-md cursor-pointer transition">#${t}</span>
+        <span onclick="closeFullscreenCard(); filterByTag('${t}')" class="text-xs bg-stone-200 dark:bg-neutral-800 hover:bg-brand-900 text-stone-800 dark:text-brand-300 px-2.5 py-1 rounded-md cursor-pointer transition">#${t}</span>
       `).join('');
 
+      // Visualisierungen & Diagramme
       let statHTML = '';
       if (card.statType === 'badge' && card.statValue) {
         statHTML = `
-          <div class="bg-brand-950/80 border border-brand-800/60 p-4 rounded-2xl flex items-center gap-4 my-4">
-            <span class="text-3xl font-black text-brand-400">${card.statValue}</span>
-            <span class="text-xs md:text-sm text-slate-200 font-medium">${card.statLabel || ''}</span>
+          <div class="bg-brand-50 dark:bg-brand-950/80 border border-brand-200 dark:border-brand-800/60 p-4 rounded-2xl flex items-center gap-4 my-4">
+            <span class="text-3xl font-black text-brand-600 dark:text-brand-400">${card.statValue}</span>
+            <span class="text-xs md:text-sm text-stone-800 dark:text-neutral-200 font-medium">${card.statLabel || ''}</span>
           </div>
         `;
-      } else if (card.statType === 'bar' && card.bar1Value) {
+      } else if (card.statType === 'bar' && card.bars && card.bars.length > 0) {
         statHTML = `
-          <div class="space-y-2 bg-slate-800/90 p-4 rounded-2xl border border-slate-700/80 my-4">
-            <div class="flex justify-between text-xs font-semibold text-slate-200">
-              <span>${card.bar1Label || 'Option A'}</span>
-              <span>${card.bar1Value}%</span>
-            </div>
-            <div class="w-full bg-slate-700 h-3 rounded-full overflow-hidden">
-              <div class="bg-brand-500 h-full rounded-full" style="width: ${card.bar1Value}%"></div>
-            </div>
-            <div class="flex justify-between text-xs font-semibold text-slate-200 pt-1">
-              <span>${card.bar2Label || 'Option B'}</span>
-              <span>${card.bar2Value}%</span>
-            </div>
-            <div class="w-full bg-slate-700 h-3 rounded-full overflow-hidden">
-              <div class="bg-slate-500 h-full rounded-full" style="width: ${card.bar2Value}%"></div>
-            </div>
+          <div class="space-y-2.5 bg-stone-100 dark:bg-neutral-800/90 p-4 rounded-2xl border border-stone-200 dark:border-neutral-700/80 my-4">
+            ${card.bars.map((b, idx) => `
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs font-semibold text-stone-800 dark:text-neutral-200">
+                  <span>${b.label || 'Option ' + (idx+1)}</span>
+                  <span>${b.value}%</span>
+                </div>
+                <div class="w-full bg-stone-300 dark:bg-neutral-700 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-brand-600 to-emerald-400 h-full rounded-full" style="width: ${Math.max(0, Math.min(100, parseFloat(b.value) || 0))}%"></div>
+                </div>
+              </div>
+            `).join('')}
           </div>
         `;
       } else if (card.statType === 'chart' && card.chartData) {
         statHTML = `
-          <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700/80 space-y-2 my-4">
-            <span class="text-xs font-bold text-slate-300 block">${card.chartLabel || 'Trend'}</span>
+          <div class="bg-stone-100 dark:bg-neutral-800/90 p-4 rounded-2xl border border-stone-200 dark:border-neutral-700/80 space-y-2 my-4">
+            <span class="text-xs font-bold text-stone-700 dark:text-neutral-300 block">${card.chartLabel || 'Trend'}</span>
             <div class="h-24 flex items-end gap-1.5 pt-2">
               ${card.chartData.split(',').map(v => `
                 <div class="bg-gradient-to-t from-brand-600 to-emerald-400 flex-1 rounded-t-md" style="height: ${Math.min(100, Math.max(10, parseInt(v) || 10))}%"></div>
@@ -718,45 +819,129 @@
       } else if (card.statType === 'image' && (card.imageUrl || card.base64Image)) {
         const imgSrc = card.base64Image || card.imageUrl;
         statHTML = `
-          <div class="rounded-2xl overflow-hidden border border-slate-700 my-4 bg-slate-950 flex items-center justify-center p-2">
+          <div class="relative group rounded-2xl overflow-hidden border border-stone-300 dark:border-neutral-700 my-4 bg-black flex items-center justify-center p-2 cursor-pointer" onclick="openZoomModal('${imgSrc}')">
             <img src="${imgSrc}" alt="Statistik Grafik" class="w-full max-h-80 object-contain rounded-xl">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-xs font-bold text-white gap-1">
+              🔍 Klicken zum Heranzoomen
+            </div>
           </div>
         `;
       }
 
       document.getElementById('modalStatContainer').innerHTML = statHTML;
 
-      if (card.sourceLink) {
-        document.getElementById('modalSourceBtn').innerHTML = `
-          <a href="${card.sourceLink}" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 text-brand-400 px-3.5 py-2 rounded-xl flex items-center gap-1 border border-slate-700">
-            🔗 Quelle: ${card.sourceTitle || 'Studie'}
-          </a>
-        `;
+      // Quellen rendern
+      const sourcesContainer = document.getElementById('modalSourcesList');
+      if (card.sources && card.sources.length > 0) {
+        sourcesContainer.innerHTML = card.sources.map((src, i) => `
+          <div id="source-${i+1}" class="p-2 rounded-xl bg-stone-200/70 dark:bg-neutral-800/60 border border-stone-300 dark:border-neutral-700/60 flex items-center justify-between">
+            <span class="font-semibold text-stone-800 dark:text-neutral-300">[${i+1}] ${src.title}</span>
+            ${src.url ? `<a href="${src.url}" target="_blank" class="text-brand-600 dark:text-brand-400 font-bold hover:underline">Link öffnen ↗</a>` : ''}
+          </div>
+        `).join('');
+        document.getElementById('modalSourcesContainer').classList.remove('hidden');
       } else {
-        document.getElementById('modalSourceBtn').innerHTML = '<span></span>';
+        document.getElementById('modalSourcesContainer').classList.add('hidden');
       }
 
       document.getElementById('cardFullscreenModal').classList.remove('hidden');
     };
 
     window.closeFullscreenCard = () => {
+      window.speechSynthesis.cancel();
+      isSpeaking = false;
+      document.getElementById('ttsBtn').innerText = '🔊 Laut vorlesen';
       document.getElementById('cardFullscreenModal').classList.add('hidden');
     };
 
-    // Text Vorlesen
-    window.speakText = () => {
-      const text = document.getElementById('modalText').innerText;
-      if (!('speechSynthesis' in window)) {
-        alert("Vorlese-Funktion wird von deinem Browser nicht unterstützt.");
-        return;
-      }
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'de-DE';
-      window.speechSynthesis.speak(utterance);
+    // Zoom Lightbox Modal
+    window.openZoomModal = (src) => {
+      document.getElementById('zoomModalImage').src = src;
+      document.getElementById('zoomModal').classList.remove('hidden');
+    };
+    window.closeZoomModal = () => {
+      document.getElementById('zoomModal').classList.add('hidden');
     };
 
-    // Hilfsfunktion zur Erzeugung schöner PDF-Karten
+    // Vorlesen mit Stopp-Funktion
+    window.toggleSpeech = () => {
+      const btn = document.getElementById('ttsBtn');
+      if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+        btn.innerText = '🔊 Laut vorlesen';
+      } else {
+        const text = document.getElementById('modalText').innerText;
+        if (!('speechSynthesis' in window)) {
+          alert("Vorlese-Funktion wird von deinem Browser nicht unterstützt.");
+          return;
+        }
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'de-DE';
+        utterance.onend = () => {
+          isSpeaking = false;
+          btn.innerText = '🔊 Laut vorlesen';
+        };
+        window.speechSynthesis.speak(utterance);
+        isSpeaking = true;
+        btn.innerText = '⏹️ Vorlesen stoppen';
+      }
+    };
+
+    // Karten-Sortieren Funktion
+    window.toggleSortModal = () => {
+      const modal = document.getElementById('sortModal');
+      modal.classList.toggle('hidden');
+
+      if (!modal.classList.contains('hidden')) {
+        tempSortCards = [...allCards.filter(c => c.category === currentCategory.id && c.subcategory === currentSubcategory)];
+        renderSortableList();
+      }
+    };
+
+    function renderSortableList() {
+      const list = document.getElementById('sortableList');
+      list.innerHTML = tempSortCards.map((c, idx) => `
+        <div class="flex items-center justify-between bg-stone-200 dark:bg-neutral-800 p-2.5 rounded-xl border border-stone-300 dark:border-neutral-700 text-xs">
+          <span class="font-semibold truncate max-w-[250px]">${idx + 1}. ${c.title}</span>
+          <div class="flex gap-1">
+            <button onclick="moveCardOrder(${idx}, -1)" class="bg-stone-300 dark:bg-neutral-700 p-1 px-2.5 rounded hover:bg-stone-400 dark:hover:bg-neutral-600 font-bold">▲</button>
+            <button onclick="moveCardOrder(${idx}, 1)" class="bg-stone-300 dark:bg-neutral-700 p-1 px-2.5 rounded hover:bg-stone-400 dark:hover:bg-neutral-600 font-bold">▼</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.moveCardOrder = (index, direction) => {
+      if (index + direction < 0 || index + direction >= tempSortCards.length) return;
+
+      const temp = tempSortCards[index];
+      tempSortCards[index] = tempSortCards[index + direction];
+      tempSortCards[index + direction] = temp;
+
+      renderSortableList();
+    };
+
+    window.saveCardOrder = async () => {
+      try {
+        const batch = writeBatch(db);
+        tempSortCards.forEach((c, idx) => {
+          const cardRef = doc(db, "arguments", c.id);
+          batch.update(cardRef, { order: idx });
+        });
+        await batch.commit();
+
+        alert("🎉 Neue Reihenfolge gespeichert!");
+        toggleSortModal();
+        await loadCardsFromFirestore();
+        openSubcategory(currentSubcategory);
+      } catch (e) {
+        alert("Fehler beim Speichern der Reihenfolge: " + e.message);
+      }
+    };
+
+    // PDF Druck-Generierung
     function generatePdfHTML(cards, title, subtitle) {
       return `
         <div style="padding: 10px; max-width: 800px; margin: 0 auto;">
@@ -773,44 +958,48 @@
             
             if (c.statType === 'badge' && c.statValue) {
               statGraphic = `
-                <div style="background:#f0fdf4; border:1px solid #86efac; padding:12px; border-radius:10px; margin-top:12px; display:flex; align-items:center; gap:12px;">
-                  <span style="font-size:22px; font-weight:900; color:#15803d;">${c.statValue}</span>
+                <div style="background:#f0fdf4; border:1px solid #86efac; padding:10px; border-radius:8px; margin-top:10px; display:flex; align-items:center; gap:12px;">
+                  <span style="font-size:20px; font-weight:900; color:#15803d;">${c.statValue}</span>
                   <span style="font-size:12px; font-weight:600; color:#166534;">${c.statLabel || ''}</span>
                 </div>
               `;
-            } else if (c.statType === 'bar' && c.bar1Value) {
+            } else if (c.statType === 'bar' && c.bars && c.bars.length > 0) {
               statGraphic = `
-                <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin-top:12px;">
-                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:#334155;">
-                    <span>${c.bar1Label || 'Option A'}</span>
-                    <span>${c.bar1Value}%</span>
-                  </div>
-                  <div style="background:#e2e8f0; height:10px; border-radius:5px; overflow:hidden; margin:4px 0 10px 0;">
-                    <div style="background:#16a34a; height:100%; width:${c.bar1Value}%;"></div>
-                  </div>
-                  <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:#334155;">
-                    <span>${c.bar2Label || 'Option B'}</span>
-                    <span>${c.bar2Value}%</span>
-                  </div>
-                  <div style="background:#e2e8f0; height:10px; border-radius:5px; overflow:hidden; margin:4px 0 0 0;">
-                    <div style="background:#64748b; height:100%; width:${c.bar2Value}%;"></div>
-                  </div>
+                <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:8px; margin-top:10px;">
+                  ${c.bars.map(b => {
+                    const rawVal = parseFloat(b.value) || 0;
+                    const isNegative = rawVal < 0;
+                    const absVal = Math.min(100, Math.abs(rawVal));
+                    const barColor = isNegative ? '#ef4444' : '#16a34a';
+
+                    return `
+                      <div style="margin-bottom:8px;">
+                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:#334155;">
+                          <span>${b.label}</span>
+                          <span>${b.value}%</span>
+                        </div>
+                        <div style="background:#e2e8f0; height:10px; border-radius:5px; overflow:hidden; margin-top:3px; position:relative;">
+                          <div style="background-color:${barColor} !important; -webkit-print-color-adjust: exact; height:100%; width:${absVal}%; border-radius:5px;"></div>
+                        </div>
+                      </div>
+                    `;
+                  }).join('')}
                 </div>
               `;
             } else if (c.statType === 'chart' && c.chartData) {
               statGraphic = `
-                <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:12px; border-radius:10px; margin-top:12px;">
-                  <span style="font-size:11px; font-weight:700; color:#475569; display:block; margin-bottom:8px;">${c.chartLabel || 'Trend'}</span>
-                  <div style="height:60px; display:flex; align-items:flex-end; gap:6px;">
+                <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:10px; border-radius:8px; margin-top:10px;">
+                  <span style="font-size:11px; font-weight:700; color:#475569; display:block; margin-bottom:6px;">${c.chartLabel || 'Trend'}</span>
+                  <div style="height:50px; display:flex; align-items:flex-end; gap:4px;">
                     ${c.chartData.split(',').map(v => `
-                      <div style="background:linear-gradient(to top, #15803d, #4ade80); flex:1; border-radius:3px 3px 0 0; height:${Math.min(100, Math.max(10, parseInt(v) || 10))}%;"></div>
+                      <div style="background-color:#16a34a !important; -webkit-print-color-adjust: exact; flex:1; border-radius:2px; height:${Math.min(100, Math.max(10, parseInt(v) || 10))}%;"></div>
                     `).join('')}
                   </div>
                 </div>
               `;
             } else if (c.statType === 'image' && (c.imageUrl || c.base64Image)) {
               const imgSrc = c.base64Image || c.imageUrl;
-              statGraphic = `<div style="margin-top:12px; text-align:center;"><img src="${imgSrc}" style="max-height:220px; max-width:100%; border-radius:10px; border:1px solid #cbd5e1;"></div>`;
+              statGraphic = `<div style="margin-top:10px; text-align:center;"><img src="${imgSrc}" style="max-height:220px; max-width:100%; border-radius:8px; border:1px solid #cbd5e1;"></div>`;
             }
 
             return `
@@ -818,7 +1007,11 @@
                 <h3 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">${i + 1}. ${c.title}</h3>
                 <p style="font-size: 12px; color: #334155; line-height: 1.6; margin: 0; white-space: pre-line;">${c.text}</p>
                 ${statGraphic}
-                ${c.sourceTitle ? `<p style="font-size: 10px; color: #64748b; margin-top: 10px; font-style: italic;">Quelle: ${c.sourceTitle}</p>` : ''}
+                ${c.sources && c.sources.length > 0 ? `
+                  <div style="margin-top:8px; font-size:10px; color:#64748b;">
+                    <strong>Quellen:</strong> ${c.sources.map((s, idx) => `[${idx+1}] ${s.title}`).join(', ')}
+                  </div>
+                ` : ''}
               </div>
             `;
           }).join('')}
@@ -866,32 +1059,50 @@
 
     function renderSubcategoryManager() {
       const container = document.getElementById('devSubcategoriesList');
-      const subcategories = [...new Set([
-        ...allCards.map(c => ({ category: c.category, name: c.subcategory })).filter(s => s.name),
-        ...customSubcategories
-      ])];
+      
+      // Eindeutige Unterthemen mit zugehöriger Kategorie filtern
+      const subMap = new Map();
+      
+      allCards.forEach(c => {
+        if (c.subcategory) {
+          subMap.set(`${c.category}_${c.subcategory}`, { category: c.category, name: c.subcategory });
+        }
+      });
+      
+      customSubcategories.forEach(s => {
+        subMap.set(`${s.category}_${s.name}`, { category: s.category, name: s.name });
+      });
 
-      if (subcategories.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-400">Noch keine Unterthemen angelegt.</p>`;
+      const uniqueSubcategories = Array.from(subMap.values());
+
+      if (uniqueSubcategories.length === 0) {
+        container.innerHTML = `<p class="text-xs text-stone-400 dark:text-neutral-400">Noch keine Unterthemen angelegt.</p>`;
         return;
       }
 
-      container.innerHTML = subcategories.map(sub => `
-        <div class="flex items-center justify-between bg-slate-100 dark:bg-slate-800 p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
-          <div>
-            <span class="text-xs text-brand-600 dark:text-brand-400 block font-semibold">${sub.category}</span>
-            <span class="text-sm font-bold text-slate-800 dark:text-slate-200">${sub.name}</span>
+      container.innerHTML = uniqueSubcategories.map(sub => {
+        const cardCount = allCards.filter(c => c.category === sub.category && c.subcategory === sub.name).length;
+        const categoryObj = categoriesData.find(cat => cat.id === sub.category);
+        const categoryLabel = categoryObj ? categoryObj.title : sub.category;
+
+        return `
+          <div class="flex items-center justify-between bg-stone-200/60 dark:bg-neutral-800 p-3 rounded-2xl border border-stone-300 dark:border-neutral-700">
+            <div>
+              <span class="text-[10px] uppercase font-bold text-brand-600 dark:text-brand-400 block">${categoryLabel}</span>
+              <span class="text-sm font-bold text-stone-800 dark:text-neutral-200">${sub.name}</span>
+              <span class="text-xs text-stone-500 dark:text-neutral-400 block mt-0.5">(${cardCount} ${cardCount === 1 ? 'Karte' : 'Karten'})</span>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="renameSubcategory('${sub.name}')" class="text-xs bg-brand-600 hover:bg-brand-500 text-white px-2.5 py-1.5 rounded-xl transition">
+                ✏️ Umbenennen
+              </button>
+              <button onclick="deleteSubcategory('${sub.name}')" class="text-xs bg-red-600 hover:bg-red-500 text-white px-2.5 py-1.5 rounded-xl transition">
+                🗑️ Löschen
+              </button>
+            </div>
           </div>
-          <div class="flex gap-2">
-            <button onclick="renameSubcategory('${sub.name}')" class="text-xs bg-brand-600 hover:bg-brand-500 text-white px-2.5 py-1.5 rounded-xl transition">
-              ✏️ Umbenennen
-            </button>
-            <button onclick="deleteSubcategory('${sub.name}')" class="text-xs bg-red-600 hover:bg-red-500 text-white px-2.5 py-1.5 rounded-xl transition">
-              🗑️ Löschen
-            </button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     window.renameSubcategory = async (oldName) => {
@@ -1033,25 +1244,41 @@
         return;
       }
 
+      // Quellen einsammeln
+      const sources = [];
+      const sourceRows = document.getElementById('sourcesContainer').children;
+      for (let row of sourceRows) {
+        const inputs = row.querySelectorAll('input');
+        if (inputs[0].value.trim()) {
+          sources.push({ title: inputs[0].value.trim(), url: inputs[1].value.trim() });
+        }
+      }
+
+      // Balken einsammeln
+      const bars = [];
+      const barRows = document.getElementById('barsContainer').children;
+      for (let row of barRows) {
+        const inputs = row.querySelectorAll('input');
+        if (inputs[0].value.trim() && inputs[1].value.trim()) {
+          bars.push({ label: inputs[0].value.trim(), value: inputs[1].value.trim() });
+        }
+      }
+
       const cardData = {
         category: document.getElementById('formCategory').value,
         subcategory: subcategory,
         title: title,
         text: text,
         tags: document.getElementById('formTags').value.trim(),
+        sources: sources,
         statType: document.getElementById('formStatType').value,
         statValue: document.getElementById('formStatValue').value.trim(),
         statLabel: document.getElementById('formStatLabel').value.trim(),
-        bar1Label: document.getElementById('formBar1Label').value.trim(),
-        bar1Value: document.getElementById('formBar1Value').value.trim(),
-        bar2Label: document.getElementById('formBar2Label').value.trim(),
-        bar2Value: document.getElementById('formBar2Value').value.trim(),
+        bars: bars,
         chartData: document.getElementById('formChartData').value.trim(),
         chartLabel: document.getElementById('formChartLabel').value.trim(),
         imageUrl: document.getElementById('formImageUrl').value.trim(),
         base64Image: document.getElementById('formBase64Image').value,
-        sourceTitle: document.getElementById('formSourceTitle').value.trim(),
-        sourceLink: document.getElementById('formSourceLink').value.trim(),
         updatedAt: new Date()
       };
 
@@ -1061,6 +1288,7 @@
           alert("🎉 Karteikarte erfolgreich aktualisiert!");
         } else {
           cardData.createdAt = new Date();
+          cardData.order = allCards.length;
           await addDoc(collection(db, "arguments"), cardData);
           alert("🎉 Neue Karteikarte gespeichert!");
         }
@@ -1089,16 +1317,27 @@
       document.getElementById('formStatType').value = card.statType || 'none';
       document.getElementById('formStatValue').value = card.statValue || '';
       document.getElementById('formStatLabel').value = card.statLabel || '';
-      document.getElementById('formBar1Label').value = card.bar1Label || '';
-      document.getElementById('formBar1Value').value = card.bar1Value || '';
-      document.getElementById('formBar2Label').value = card.bar2Label || '';
-      document.getElementById('formBar2Value').value = card.bar2Value || '';
       document.getElementById('formChartData').value = card.chartData || '';
       document.getElementById('formChartLabel').value = card.chartLabel || '';
       document.getElementById('formImageUrl').value = card.imageUrl || '';
       document.getElementById('formBase64Image').value = card.base64Image || '';
-      document.getElementById('formSourceTitle').value = card.sourceTitle || '';
-      document.getElementById('formSourceLink').value = card.sourceLink || '';
+
+      // Quellen befüllen
+      document.getElementById('sourcesContainer').innerHTML = '';
+      if (card.sources && card.sources.length > 0) {
+        card.sources.forEach(s => addSourceInputRow(s.title, s.url));
+      } else if (card.sourceTitle) {
+        addSourceInputRow(card.sourceTitle, card.sourceLink || '');
+      }
+
+      // Balken befüllen
+      document.getElementById('barsContainer').innerHTML = '';
+      if (card.bars && card.bars.length > 0) {
+        card.bars.forEach(b => addBarInputRow(b.label, b.value));
+      } else if (card.bar1Value) {
+        addBarInputRow(card.bar1Label, card.bar1Value);
+        addBarInputRow(card.bar2Label, card.bar2Value);
+      }
 
       switchDevTab('cards');
       toggleStatFields();
@@ -1130,8 +1369,8 @@
       document.getElementById('formImageUrl').value = '';
       document.getElementById('formBase64Image').value = '';
       document.getElementById('formFileInput').value = '';
-      document.getElementById('formSourceTitle').value = '';
-      document.getElementById('formSourceLink').value = '';
+      document.getElementById('sourcesContainer').innerHTML = '';
+      document.getElementById('barsContainer').innerHTML = '';
       toggleStatFields();
 
       document.getElementById('formModeText').innerText = "Neue Karteikarte erstellen";
